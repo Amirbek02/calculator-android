@@ -74,35 +74,54 @@ tvExp.setText("11231");
         String data = tvExp.getText().toString();
 
         if(btnText.equals("AC")) {
-            tvExp.setText("  ");
+            tvExp.setText("0");
             tvResult.setText("");
             return;
         }
 
         if(btnText.equals("C")) {
-            if(data.length() !=0 && !data.equals("0")) {
+            if(data.length() != 0 && !data.equals("0")) {
+                data = data.substring(0, data.length() - 1);
+                if (data.isEmpty()) {
+                    data = "0";
+                }
+                tvExp.setText(data);
+                return;
+            } else {
+                data = "0";
+                tvExp.setText(data);
+            }
+            return;
+        }
+
+        if (data.equals("0") && !btnText.equals(".")) {
+            data = btnText;
+        } else {
+            data += btnText;
+        }
+
+        if ("+-*/".contains(btnText)) {
+            if ("+-*/".contains(data.substring(data.length() - 2, data.length() - 1))) {
                 data = data.substring(0, data.length() - 1);
                 tvExp.setText(data);
                 return;
             }
-            else {
-                data="0";
-                tvExp.setText(data);
-            }
         }
+
+        tvExp.setText(data);
         if(btnText.equals("=")) {
             tvExp.setText(tvResult.getText());
             return;
         }
-        data+=btnText;
-        tvExp.setText(data);
-
         Log.i("Result", data);
         String finalResult = evaluateExpression(data);
-        if(!finalResult.equals("Error"))
+        if (!finalResult.equals("Error"))
             tvResult.setText(finalResult);
         Log.i("Result", finalResult);
     }
+
+
+
 
     private String evaluateExpression(String expression) {
         // Создаем контекст Rhino
